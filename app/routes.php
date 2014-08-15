@@ -31,8 +31,6 @@ Route::get('cats/breeds/{name}', function($name) {
 
   //
   $breed = Breed::whereName($name)->with('cats')->first();
-
-
   return View::make('cats.index')
                ->with('breed', $breed)
                ->with('cats', $breed->cats);
@@ -47,10 +45,19 @@ Route::get('cats/breeds/{name}', function($name) {
 //  [a-zA-Z]+  for only small and upper case letters
 //  [a-zA-z0-9]+ for alphanumerics
 //
+/*
 Route::get('cats/{id}', function($id) {
   return "Cats # : $id";
 })->where('id', '[0-9]+');
+*/
 
+Route::get('cats/{id}', function($id){
+  $cat = Cat::find($id);
+  var_dump ($cat);
+
+  return View::make('cats.single')
+                ->with('cat', $cat);
+});
 
 // About route
 
