@@ -16,6 +16,7 @@ Route::get('/', function(){
   return Redirect::to('cats');
 });
 
+// Overview route
 Route::get("cats", function(){
   return "All Cats";
 });
@@ -31,3 +32,10 @@ Route::get("cats", function(){
 Route::get('cats/{id}', function($id) {
   return "Cats # : $id";
 })->where('id', '[0-9]+');
+
+
+// About route
+
+Route::get('about', function(){
+  return View::make('about')->with('number_of_cats', 9000);
+});
