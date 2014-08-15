@@ -13,6 +13,10 @@
 
 // Index route
 Route::get('/', function(){
+  return Redirect::to('cats');
+});
+
+Route::get("cats", function(){
   return "All Cats";
 });
 
