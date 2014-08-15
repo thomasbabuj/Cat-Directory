@@ -49,7 +49,7 @@ Route::get('cats/breeds/{name}', function($name) {
 Route::get('cats/{id}', function($id) {
   return "Cats # : $id";
 })->where('id', '[0-9]+');
-*/
+
 
 Route::get('cats/{id}', function($id){
   $cat = Cat::find($id);
@@ -57,6 +57,51 @@ Route::get('cats/{id}', function($id){
 
   return View::make('cats.single')
                 ->with('cat', $cat);
+});
+*/
+
+Route::model('cat', 'Cat');
+
+Route::get('cats/{cat}', function(Cat $cat) {
+  return View::make('cats.single')->with('cat', $cat);
+});
+
+// Create a new cat page route
+
+Route::get('cats/create', function() {
+  $cat = new Cat;
+  return View::make('cats.edit')
+               ->with('cat', $cat)
+               ->with('method', 'post');
+});
+
+Route::get('cats/{cat}/edit', function(Cat $cat){
+  return View::make('cats.edit')
+               ->with('cat', $cat)
+               ->with('method', 'put');
+});
+
+Route::get('cats/{cat}/delete', function(Cat $cat) {
+  return View::make('cats.edit')
+              ->with('cat', $cat)
+              ->with('method', 'delete');
+});
+
+Route::post('cats', function(){
+  $cat = Cat::create(Input::all());
+  return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
+});
+
+Route::post('cats/{cat}', function(Cat $cat){
+  $cat->update(Input::all());
+  return Redirect::to('cats/'. $cat->id)
+      ->with('message', 'Successfully update page!');
+});
+
+Route::delete('cats/{cat}', function(Cat $cat) {
+  $cat->delete();
+  return Redirect::to('cats')
+            ->with('message', 'Successfully deleted page');
 });
 
 // About route
