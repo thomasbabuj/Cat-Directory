@@ -18,6 +18,12 @@ Route::get('/', function(){
 
 // Cats Individual page
 // contains id
-Route::get('/cats/{id}', function($id) {
-  return "Cat $id";
-});
+// route with conditions
+// where parameter takes two parameters - > name and a regular expression
+//  [a-z]+   for only small case letters
+//  [a-zA-Z]+  for only small and upper case letters
+//  [a-zA-z0-9]+ for alphanumerics
+//
+Route::get('cats/{id}', function($id) {
+  return "Cats # : $id";
+})->where('id', '[0-9]+');
