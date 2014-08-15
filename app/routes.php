@@ -11,10 +11,30 @@
 |
 */
 
+Route::model('cat', 'Cat');
+
+//  Cats Edit Composers
+View::composer('cats.edit', function($view) {
+  $breeds = Breed::all();
+  if ( count($breeds) > 0 ) {
+    $breed_options = array_combine( $breeds->lists('id'), $breeds->lists('name') );
+  } else {
+    $breed_options = array(null, 'Unspecified');
+  }
+  $view->with('breed_options' , $breed_options );
+});
+
 // Index route
 Route::get('/', function(){
   return Redirect::to('cats');
 });
+
+// About route
+Route::get('about', function(){
+  return View::make('about')->with('number_of_cats', 9000);
+});
+
+
 
 // Overview page route
 Route::get('cats', function(){
@@ -28,13 +48,34 @@ Route::get('cats', function(){
 Route::get('cats/breeds/{name}', function($name) {
   //whereName -> dynamic method that translates into a Where name = $name SQL query
   // first()  -> retrieves first instance
-
-  //
   $breed = Breed::whereName($name)->with('cats')->first();
   return View::make('cats.index')
                ->with('breed', $breed)
                ->with('cats', $breed->cats);
+});
 
+// Create a new cat page route
+Route::get('cats/create', function() {
+  $cat = new Cat;
+  return View::make('cats.edit')
+               ->with('cat', $cat)
+               ->with('method', 'post');
+});
+
+Route::post('cats', function(){
+  $cat = Cat::create(Input::all());
+  return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
+});
+
+/*
+Route::get('cats/{cat}', function(Cat $cat) {
+  return View::make('cats.single')->with('cat', $cat);
+});
+*/
+Route::get('cats/{id}', function($id) {
+  $cat = Cat::find($id);
+  return View::make('cats.single')
+    ->with('cat', $cat);
 });
 
 // Cats Individual page
@@ -60,20 +101,10 @@ Route::get('cats/{id}', function($id){
 });
 */
 
-Route::model('cat', 'Cat');
 
-Route::get('cats/{cat}', function(Cat $cat) {
-  return View::make('cats.single')->with('cat', $cat);
-});
 
-// Create a new cat page route
 
-Route::get('cats/create', function() {
-  $cat = new Cat;
-  return View::make('cats.edit')
-               ->with('cat', $cat)
-               ->with('method', 'post');
-});
+
 
 Route::get('cats/{cat}/edit', function(Cat $cat){
   return View::make('cats.edit')
@@ -87,25 +118,20 @@ Route::get('cats/{cat}/delete', function(Cat $cat) {
               ->with('method', 'delete');
 });
 
-Route::post('cats', function(){
-  $cat = Cat::create(Input::all());
-  return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
-});
 
-Route::post('cats/{cat}', function(Cat $cat){
+
+Route::put('cats/{cat}', function(Cat $cat){
   $cat->update(Input::all());
   return Redirect::to('cats/'. $cat->id)
-      ->with('message', 'Successfully update page!');
+      ->with('message', 'Successfully update profile!');
 });
 
 Route::delete('cats/{cat}', function(Cat $cat) {
   $cat->delete();
   return Redirect::to('cats')
-            ->with('message', 'Successfully deleted page');
+            ->with('message', 'Successfully deleted profile');
 });
 
-// About route
 
-Route::get('about', function(){
-  return View::make('about')->with('number_of_cats', 9000);
-});
+
+

@@ -17,12 +17,13 @@
         Delete {{ $cat->name }} ?
      @else
         Edit {{ $cat->name }}
-     @end
+     @endif
     </h2>
 
 @stop
 
 @section('content')
+
 
   {{ Form::model ($cat, array('method' => $method , 'url' => 'cats/'.$cat->id)) }}
 
@@ -43,8 +44,7 @@
     {{ Form::submit('Save', array('class' => 'btn btn-default')) }}
   @else
     {{ Form::submit('Delete' , array('class' => 'btn btn-default')) }}
-
-  {{ Form::clsoe() }}
-
+  @endunless
+  {{ Form::close() }}
 @stop
 
