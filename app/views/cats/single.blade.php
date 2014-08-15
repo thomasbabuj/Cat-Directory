@@ -9,7 +9,7 @@
 
 @section('header')
 
-    <a href="{{ url('/') }}">Back to overview</a>
+    <a href="{{ URL::to('/') }}">Back to overview</a>
     <h2>
       {{{ $cat->name }}}
     </h2>
