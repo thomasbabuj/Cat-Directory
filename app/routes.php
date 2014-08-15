@@ -16,9 +16,28 @@ Route::get('/', function(){
   return Redirect::to('cats');
 });
 
-// Overview route
-Route::get("cats", function(){
-  return "All Cats";
+// Overview page route
+Route::get('cats', function(){
+  // get all records from Cat model
+  $cats = Cat::all();
+
+  var_dump( $cats );
+  // assign it to the cat index view
+  return View::make('cats.index')->with('cats', $cats);
+});
+
+Route::get('cats/breeds/{name}', function($name) {
+  //whereName -> dynamic method that translates into a Where name = $name SQL query
+  // first()  -> retrieves first instance
+
+  //
+  $breed = Breed::whereName($name)->with('cats')->first();
+
+
+  return View::make('cats.index')
+               ->with('breed', $breed)
+               ->with('cats', $breed->cats);
+
 });
 
 // Cats Individual page
