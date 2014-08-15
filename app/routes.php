@@ -21,7 +21,6 @@ Route::get('cats', function(){
   // get all records from Cat model
   $cats = Cat::all();
 
-  var_dump( $cats );
   // assign it to the cat index view
   return View::make('cats.index')->with('cats', $cats);
 });
