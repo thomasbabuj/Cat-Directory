@@ -6,8 +6,8 @@ class UsersTableSeeder extends Seeder {
 		 DB::table('users')->truncate();
 
 		 DB::table('users')->insert(array(
-		 	array('username' => 'admin', 'password' => Hash::make('hunter2'), 'is_admin' => true ),
-		 	array('username' => 'scott', 'password' => Hash::make('tigher'), 'is_admin' => false )
+		 	array('username' => 'admin', 'password' => Hash::make('hunter2'), 'is_admin' => true, 'created_at' =>  new DateTime , 'updated_at' => new DateTime ),
+		 	array('username' => 'scott', 'password' => Hash::make('tigher'), 'is_admin' => false, 'created_at' =>  new DateTime , 'updated_at' => new DateTime )
 		 ));
 	}
 }
