@@ -15,4 +15,16 @@ class Cat extends Eloquent {
     return $this->belongsTo('Breed');
   }
 
+  public function owner()
+  {
+    var_dump( $this->belongsTo('User') );
+    return $this->belongsTo('User');
+  }
+
+  public function isOwnedBy( User $user)
+  {
+    echo "I am in is Owned By";
+    return $this->owner === $user->id;
+  }
+
 }

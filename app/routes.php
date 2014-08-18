@@ -38,7 +38,6 @@
 
   Route::get('cats/{id}', function($id) {
     $cat = Cat::find($id);
-    //var_dump( $cat );
     return View::make('cats.single')
           ->with('cat', $cat);
   })->where('id', '[0-9]+');
