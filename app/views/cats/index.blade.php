@@ -34,7 +34,7 @@
 
   @if( Auth::check() )
     <hr />
-    <small class="small">* cats you own </small>
+    <small class="small">* cats you own
   @endif
 
 @stop

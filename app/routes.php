@@ -11,177 +11,85 @@
 |
 */
 
-Route::model('cat', 'Cat');
+// Including the Model
+  Route::model('cat', 'Cate');
 
-//  Cats Edit Composers
-View::composer('cats.edit', function($view) {
-  $breeds = Breed::all();
-  if ( count($breeds) > 0 ) {
-    $breed_options = array_combine( $breeds->lists('id'), $breeds->lists('name') );
-  } else {
-    $breed_options = array(null, 'Unspecified');
-  }
-  $view->with('breed_options' , $breed_options );
-});
-
-// Index route
-Route::get('/', function(){
-  return Redirect::to('cats');
-});
-
-// About route
-Route::get('about', function(){
-  return View::make('about')->with('number_of_cats', 9000);
-});
-
-
-
-// Overview page route
-Route::get('cats', function(){
-  // get all records from Cat model
-  $cats = Cat::all();
-
-  // assign it to the cat index view
-  return View::make('cats.index')->with('cats', $cats);
-});
-
-Route::get('cats/breeds/{name}', function($name) {
-  //whereName -> dynamic method that translates into a Where name = $name SQL query
-  // first()  -> retrieves first instance
-  $breed = Breed::whereName($name)->with('cats')->first();
-  return View::make('cats.index')
-               ->with('breed', $breed)
-               ->with('cats', $breed->cats);
-});
-
-Route::get('cats/{id}', function($id) {
-  $cat = Cat::find($id);
-  return View::make('cats.single')
-    ->with('cat', $cat);
-})->where('id', '[0-9]');
-
-Route::group(array("before" => 'auth'), function(){
-
-  // Create a new cat page route
-  Route::get('cats/create', function() {
-    $cat = new Cat;
-    return View::make('cats.edit')
-                 ->with('cat', $cat)
-                 ->with('method', 'post');
+  View::composer('cats.edit', function($view){
+    $breeds = Breed::all();
+    $bread_options = array_combine( $breeds->lists('id'), $breeds->lists('name') );
+    $view->with('breed_options', $bread_options);
   });
-  // Edit Page route
-  Route::get('cats/{cat}/edit', function(Cat $cat){
+
+  Route::get('/', function(){
+    return Redirect::to('cats');
+  });
+
+  Route::get('cats', function(){
+    $cats = Cat::all();
+    return View::make('cats/index')->with('cats', $cats);
+  });
+
+  Route::get('cats/breeds/{name}', function() {
+    $breed = Breed::whereName($name)->with('cats')->first();
+    return View::make('cats/index')
+            ->with('breed', $breed)
+            ->with('cats', $breed->cats);
+  });
+
+  Route::get('cats/{id}', function($id) {
+    $cat = Cat::find($id);
     //var_dump( $cat );
-    //
-    if( Auth::user()->id == $cat->user_id ) {
+    return View::make('cats.single')
+          ->with('cat', $cat);
+  })->where('id', '[0-9]+');
+
+  Route::group(array("before" => "auth"), function() {
+      Route::get('cats/create', function() {
+        $cat = new Cat;
         return View::make('cats.edit')
-                     ->with('cat', $cat)
-                     ->with('method', 'put');
-    } else {
-        return Redirect::to('cats/'. $cat->id)->with('error', "You are not allowed to edit this page");
-    }
-  });
-  // Delete page route
-  Route::get('cats/{cat}/delete', function(Cat $cat) {
-    if ( Auth::user()->id == $cat->user_id  ) {
-        return View::make('cats.edit')
+            ->with('cat', $cat)
+            ->with('method', 'post');
+      });
+
+      Route::get('cats/{cat}/edit', function(Cat $cat) {
+          if( Auth::user()->canEdit($cat) ) {
+            return View::make('cats.edit')
+                ->with('cat', $cat)
+                ->with('method', 'put');
+          } else {
+            return Redirect::to('cats/'. $cat->id)
+                  ->with('error', 'You are not allowed to edit this page');
+          }
+      });
+
+      Route::get('cats/{cat}/delete', function(Cat $cat) {
+          if (Auth::user()->canEdit($cat) ) {
+            return View::make('cats.edit')
                     ->with('cat', $cat)
                     ->with('method', 'delete');
-    } else {
-      return Redirect::to('cats/'. $cat->id)->with('error', 'You are not allowed to delete this page');
-    }
+          } else {
+            return Redirect::to('cats/' . $cat->id)
+                ->with('error', 'You are not allowed to delete this page');
+          }
+      });
+
   });
-});
 
-Route::post('cats', function(){
-  $cat = Cat::create(Input::all());
-  $cat->user_id  = Auth::user()->id;
-  if ( $cat->save() ) {
-    return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
-  } else {
-    return Redirect::back()->with('error', 'Could not create profile');
-  }
+  Route::get('login', function() {
+      return View::make('login');
+  });
 
-});
+  Route::post('login', function() {
+    if ( Auth::attempt(Input::only('username', 'password')))
+      return Redirect::intended('/');
+    else
+      return Redirect::back()
+            ->withInput()
+            ->with('error', "Invalid Credentials");
+  });
 
-/*
-Route::get('cats/{cat}', function(Cat $cat) {
-  return View::make('cats.single')->with('cat', $cat);
-});
-*/
-
-
-// Cats Individual page
-// contains id
-// route with conditions
-// where parameter takes two parameters - > name and a regular expression
-//  [a-z]+   for only small case letters
-//  [a-zA-Z]+  for only small and upper case letters
-//  [a-zA-z0-9]+ for alphanumerics
-//
-/*
-Route::get('cats/{id}', function($id) {
-  return "Cats # : $id";
-})->where('id', '[0-9]+');
-
-
-Route::get('cats/{id}', function($id){
-  $cat = Cat::find($id);
-  var_dump ($cat);
-
-  return View::make('cats.single')
-                ->with('cat', $cat);
-});
-*/
-
-Route::put('cats/{cat}', function(Cat $cat){
-  $cat->update(Input::all());
-  //return Redirect::to('cats/'. $cat->id)
-      //->with('message', 'Successfully update profile!');
-
-  $cat->user_id  = Auth::user()->id;
-  if ( $cat->update() ) {
-    return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully update profile!');
-  } else {
-    return Redirect::back()->with('error', 'Problem editing profile');
-  }
-});
-
-Route::delete('cats/{cat}', function(Cat $cat) {
-  $cat->delete();
-  return Redirect::to('cats')
-            ->with('message', 'Successfully deleted profile');
-});
-
-
-// Login Page route
-Route::get('login', function(){
-  return View::make('login');
-});
-
-// Logout page route
-Route::get('logout', function(){
-  Auth::logout();
-  return Redirect::to('/')->with('message', 'Your are now logged out');
-});
-
-// Route to handle login attempts
-Route::post('login', function(){
-
-  $credentials = array(
-    'username' => Input::get('username'),
-    'password' => Input::get('password'),
-  );
-
-  if ( Auth::attempt($credentials) ) {
-    return Redirect::intended('/');
-  } else {
-    return Redirect::back()->withInput()->with('error', "Invalid Credentials");
-  }
-
-});
-
-
-
-
-
+  Route::get('logout', function(){
+    Auth::logout();
+    return Redirect::to('/')
+            ->with('message', 'You are now logged out');
+  });
