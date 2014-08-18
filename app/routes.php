@@ -71,19 +71,29 @@ Route::group(array("before" => 'auth'), function(){
   });
   // Edit Page route
   Route::get('cats/{cat}/edit', function(Cat $cat){
-  return View::make('cats.edit')
-               ->with('cat', $cat)
-               ->with('method', 'put');
+    //var_dump( $cat );
+    //
+    if( Auth::user()->id == $cat->user_id ) {
+        return View::make('cats.edit')
+                     ->with('cat', $cat)
+                     ->with('method', 'put');
+    } else {
+        return Redirect::to('cats/'. $cat->id)->with('error', "You are not allowed to edit this page");
+    }
   });
   // Delete page route
   Route::get('cats/{cat}/delete', function(Cat $cat) {
-    return View::make('cats.edit')
-                ->with('cat', $cat)
-                ->with('method', 'delete');
+    if ( Auth::user()->id == $cat->user_id  ) {
+        return View::make('cats.edit')
+                    ->with('cat', $cat)
+                    ->with('method', 'delete');
+    } else {
+      return Redirect::to('cats/'. $cat->id)->with('error', 'You are not allowed to delete this page');
+    }
+
   });
 
 });
-
 
 Route::post('cats', function(){
   $cat = Cat::create(Input::all());
@@ -125,15 +135,6 @@ Route::get('cats/{id}', function($id){
                 ->with('cat', $cat);
 });
 */
-
-
-
-
-
-
-
-
-
 
 Route::put('cats/{cat}', function(Cat $cat){
   $cat->update(Input::all());
