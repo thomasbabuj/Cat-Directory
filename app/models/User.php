@@ -34,7 +34,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->password;
 	}
 
-	public functin cats()
+	public function cats()
 	{
 		return $this->hasMany('Cat');
 	}
@@ -44,7 +44,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->id == $cat->owner;
 	}
 
-	public function canEdit(Cat $cat) 
+	public function canEdit(Cat $cat)
 	{
 		return $this->is_admin or $this->owns($cat);
 	}
