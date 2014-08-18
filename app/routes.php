@@ -60,13 +60,30 @@ Route::get('cats/{id}', function($id) {
     ->with('cat', $cat);
 })->where('id', '[0-9]');
 
-// Create a new cat page route
-Route::get('cats/create', function() {
-  $cat = new Cat;
+Route::group(array("before" => 'auth'), function(){
+
+  // Create a new cat page route
+  Route::get('cats/create', function() {
+    $cat = new Cat;
+    return View::make('cats.edit')
+                 ->with('cat', $cat)
+                 ->with('method', 'post');
+  });
+  // Edit Page route
+  Route::get('cats/{cat}/edit', function(Cat $cat){
   return View::make('cats.edit')
                ->with('cat', $cat)
-               ->with('method', 'post');
+               ->with('method', 'put');
+  });
+  // Delete page route
+  Route::get('cats/{cat}/delete', function(Cat $cat) {
+    return View::make('cats.edit')
+                ->with('cat', $cat)
+                ->with('method', 'delete');
+  });
+
 });
+
 
 Route::post('cats', function(){
   $cat = Cat::create(Input::all());
@@ -114,17 +131,7 @@ Route::get('cats/{id}', function($id){
 
 
 
-Route::get('cats/{cat}/edit', function(Cat $cat){
-  return View::make('cats.edit')
-               ->with('cat', $cat)
-               ->with('method', 'put');
-});
 
-Route::get('cats/{cat}/delete', function(Cat $cat) {
-  return View::make('cats.edit')
-              ->with('cat', $cat)
-              ->with('method', 'delete');
-});
 
 
 
