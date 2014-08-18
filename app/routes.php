@@ -54,6 +54,12 @@ Route::get('cats/breeds/{name}', function($name) {
                ->with('cats', $breed->cats);
 });
 
+Route::get('cats/{id}', function($id) {
+  $cat = Cat::find($id);
+  return View::make('cats.single')
+    ->with('cat', $cat);
+})->where('id', '[0-9]');
+
 // Create a new cat page route
 Route::get('cats/create', function() {
   $cat = new Cat;
@@ -78,11 +84,7 @@ Route::get('cats/{cat}', function(Cat $cat) {
   return View::make('cats.single')->with('cat', $cat);
 });
 */
-Route::get('cats/{id}', function($id) {
-  $cat = Cat::find($id);
-  return View::make('cats.single')
-    ->with('cat', $cat);
-});
+
 
 // Cats Individual page
 // contains id
