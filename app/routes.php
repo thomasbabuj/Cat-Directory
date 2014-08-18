@@ -64,7 +64,13 @@ Route::get('cats/create', function() {
 
 Route::post('cats', function(){
   $cat = Cat::create(Input::all());
-  return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
+  $cat->user_id  = Auth::user()->id;
+  if ( $cat->save() ) {
+    return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
+  } else {
+    return Redirect::back()->with('error', 'Could not create profile');
+  }
+
 });
 
 /*
@@ -122,8 +128,15 @@ Route::get('cats/{cat}/delete', function(Cat $cat) {
 
 Route::put('cats/{cat}', function(Cat $cat){
   $cat->update(Input::all());
-  return Redirect::to('cats/'. $cat->id)
-      ->with('message', 'Successfully update profile!');
+  //return Redirect::to('cats/'. $cat->id)
+      //->with('message', 'Successfully update profile!');
+
+  $cat->user_id  = Auth::user()->id;
+  if ( $cat->update() ) {
+    return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully update profile!');
+  } else {
+    return Redirect::back()->with('error', 'Problem editing profile');
+  }
 });
 
 Route::delete('cats/{cat}', function(Cat $cat) {
