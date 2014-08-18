@@ -138,6 +138,12 @@ Route::get('login', function(){
   return View::make('login');
 });
 
+// Logout page route
+Route::get('logout', function(){
+  Auth::logout();
+  return Redirect::to('/')->with('message', 'Your are now logged out');
+});
+
 // Route to handle login attempts
 Route::post('login', function(){
 
@@ -149,7 +155,7 @@ Route::post('login', function(){
   if ( Auth::attempt($credentials) ) {
     return Redirect::intended('/');
   } else {
-    return Redirect::back()->withInput()->with('Error', "Invalid Credentials");
+    return Redirect::back()->withInput()->with('error', "Invalid Credentials");
   }
 
 });
