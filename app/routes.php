@@ -133,5 +133,21 @@ Route::delete('cats/{cat}', function(Cat $cat) {
 });
 
 
+// Login Page route
+Route::get('login', function(){
+  return View::make('login');
+});
+
+// Route to handle login attempts
+Route::post('login', function(){
+  if ( Auth::attempt(Input::only('username', 'password')) ) {
+    return Redirect::intended('/');
+  } else {
+    return Redirect::back()->withInput()->with('Error', 'Invalid Credentials');
+  }
+});
+
+
+
 
 
