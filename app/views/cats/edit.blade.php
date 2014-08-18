@@ -8,7 +8,7 @@
 
 @section('header')
 
-    <a href="{{ 'cats/'.$cat->id }}"> &larr; Cancel </a>
+    <a href="{{ URL::to('cats/'.$cat->id.'') }}"> &larr; Cancel </a>
 
     <h2>
       @if ( $method == 'post')

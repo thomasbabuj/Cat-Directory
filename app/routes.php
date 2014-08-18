@@ -90,9 +90,7 @@ Route::group(array("before" => 'auth'), function(){
     } else {
       return Redirect::to('cats/'. $cat->id)->with('error', 'You are not allowed to delete this page');
     }
-
   });
-
 });
 
 Route::post('cats', function(){
