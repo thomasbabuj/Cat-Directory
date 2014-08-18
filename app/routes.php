@@ -140,13 +140,18 @@ Route::get('login', function(){
 
 // Route to handle login attempts
 Route::post('login', function(){
-  if( Auth::attempt(Input::only('username', 'password')) ) {
+
+  $credentials = array(
+    'username' => Input::get('username'),
+    'password' => Input::get('password'),
+  );
+
+  if ( Auth::attempt($credentials) ) {
     return Redirect::intended('/');
   } else {
-    return Redirect::back()
-              ->withInput()
-              ->with('Error', "Invalid credentials");
+    return Redirect::back()->withInput()->with('Error', "Invalid Credentials");
   }
+
 });
 
 
