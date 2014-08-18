@@ -41,12 +41,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function owns(Cat $cat)
 	{
-		return $this->id == $cat->owner;
+		return $this->id == $cat->user_id;
 	}
 
 	public function canEdit(Cat $cat)
 	{
-		print_r ($cat);
 		return $this->is_admin or $this->owns($cat);
 	}
 
