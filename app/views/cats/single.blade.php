@@ -13,13 +13,15 @@
     <h2>
       {{{ $cat->name }}}
     </h2>
-    <a href="{{ url('cats/'.$cat->id .'/edit') }}">
-      <span class="glyphicon glyphicon-edit"></span> Edit
-    </a>
-    <a href="{{ url('cats/'.$cat->id. '/delete') }}">
-      <span class="glyphicon glyphicon-trash"></span> Delete
-    </a>
-    Last Edited: {{ $cat->updated_at }}
+    @if ( Auth::check() and Auth::user()->canEdit($cat) )
+      <a href="{{ url('cats/'.$cat->id .'/edit') }}">
+        <span class="glyphicon glyphicon-edit"></span> Edit
+      </a>
+      <a href="{{ url('cats/'.$cat->id. '/delete') }}">
+        <span class="glyphicon glyphicon-trash"></span> Delete
+      </a>
+      Last Edited: {{ $cat->updated_at }}
+    @endif
 
 @stop
 

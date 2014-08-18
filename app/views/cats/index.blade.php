@@ -13,9 +13,11 @@
 
   <h2>
     All @if (isset($breed)) {{ $breed->name }} @endif Cats
-    <a href="{{ url('cats/create') }}" class="btn btn-primary pull-right">
-      Add a new cat
-    </a>
+    @if ( Auth::check() )
+      <a href="{{ url('cats/create') }}" class="btn btn-primary pull-right">
+        Add a new cat
+      </a>
+    @endif
   </h2>
 
 @stop
@@ -29,5 +31,10 @@
       </a>
     </div>
   @endforeach
+
+  @if( Auth::check() )
+    <hr />
+    <small class="small">* cats you own </small>
+  @endif
 
 @stop
