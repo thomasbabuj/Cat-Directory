@@ -19,7 +19,7 @@
  </div>
  <div class="form-group">
     {{ Form::label('Password') }}
-    {{ Form::text('password') }}
+    {{ Form::password('password') }}
  </div>
   {{ Form::submit() }}
   {{ Form::close() }}
