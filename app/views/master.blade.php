@@ -4,6 +4,12 @@
     <meta charset="utf-8">
     <title>Cats DB</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+    <style>
+      body {
+          font-family: "Droid Sans";
+      }
+    </style>    
   </head>
   <body>
     <div class="container">
