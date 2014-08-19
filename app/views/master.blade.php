@@ -11,9 +11,9 @@
         @if ( Auth::check() )
           Logged in as 
           <strong>{{{ Auth::user()->username }}}</strong>
-          {{ link_to('logout', 'Log Out') }}
+          <a href="{{ URL::to('logout?_token='.csrf_token()) }}">Logout</a>
         @else
-          {{ link_to('login', 'Log In') }}
+          <a href="{{ URL::to('login') }}">Log in</a>
         @endif
         @yield('header')
       </div>
