@@ -83,7 +83,7 @@ Route::group(array('before' => 'auth'), function(){
   });  
 
   Route::group(array("before" => 'csrf'), function(){
-    
+
     Route::post('cats', function(){
       $cat = Cat::create(Input::all());    
       $cat->user_id = Auth::user()->id;
@@ -127,6 +127,7 @@ Route::get('logout', function(){
   return Redirect::to('/')
           ->with('message', 'You are now logged out');
 });
+
 
 
 /*
