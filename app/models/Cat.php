@@ -15,7 +15,7 @@ class Cat extends Eloquent {
     return $this->belongsTo('Breed');
   }
 
-  public function owners() {
+  public function owner() {
   	return $this->belongsTo('User');
   }
 

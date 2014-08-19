@@ -83,8 +83,14 @@ Route::group(array('before' => 'auth'), function(){
   });  
 
   Route::post('cats', function(){
-    $cat = Cat::create(Input::all());
-    return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
+    $cat = Cat::create(Input::all());    
+    $cat->user_id = Auth::user()->id;
+    if ( $cat->save() ) {
+      return Redirect::to('cats/' .$cat->id )->with('message', 'Successfully create page!');
+    } else {
+      return Redirect::back()->with('error', 'Could not create profile');
+    }
+
   });  
 
   Route::put('cats/{cat}', function(Cat $cat){
