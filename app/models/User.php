@@ -36,7 +36,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function cats()
 	{
-		return $this->hasMany('Cat');
+		return $this->hasMany('Cat', 'owners');
 	}
 
 	public function owns(Cat $cat)
