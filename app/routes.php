@@ -12,7 +12,7 @@
 */
 
 // Including the Model
-  Route::model('cat', 'Cate');
+  Route::model('cat', 'Cat');
 
   View::composer('cats.edit', function($view){
     $breeds = Breed::all();
